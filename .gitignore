@@ -4,7 +4,6 @@ MANIFEST
 *.egg-info
 *.bak
 
-dist/
 build/
 .venv
 .vscode
