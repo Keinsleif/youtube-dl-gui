@@ -311,7 +311,7 @@ class YoutubeDLDownloader(object):
         if os.name == 'nt':
             cmd = [self.youtubedl_path] + options + [url]
         else:
-            cmd = ['python', self.youtubedl_path] + options + [url]
+            cmd = ['python3', self.youtubedl_path] + options + [url]
 
         return cmd
 
