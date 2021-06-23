@@ -1,0 +1,10 @@
+MANIFEST
+*.pyc
+*.mo
+*.egg-info
+*.bak
+
+dist/
+build/
+.venv
+.vscode

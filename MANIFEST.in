@@ -1,0 +1,11 @@
+include LICENSE
+include README.md
+include MANIFEST.in
+include youtube-dl-gui.1
+
+include youtube_dl_gui/data/pixmaps/icons-license
+
+recursive-include youtube_dl_gui/data *.png *.ico
+recursive-include youtube_dl_gui/locale *.po
+
+recursive-exclude youtube_dl_gui/locale *.mo
