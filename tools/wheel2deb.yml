@@ -1,0 +1,4 @@
+# change setting for all wheels
+.:
+  maintainer_name: "kazuto28"
+  maintainer_email: "mountaindull@gmail.com"
