@@ -319,7 +319,6 @@ setup(
     long_description    = __descriptionfull__,
     packages            = [__packagename__],
     cmdclass            = cmdclass,
-    install_requires = ["PyPubSub"],
 
     **params
 )
