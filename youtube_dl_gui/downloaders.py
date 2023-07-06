@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """Python module to download videos.
@@ -8,7 +8,7 @@ for downloading the video files.
 
 """
 
-from __future__ import unicode_literals
+
 
 import re
 import os
@@ -18,10 +18,8 @@ import signal
 import subprocess
 
 from time import sleep
-from Queue import Queue
+from queue import Queue
 from threading import Thread
-
-from .utils import convert_item
 
 
 class PipeReader(Thread):
@@ -34,7 +32,7 @@ class PipeReader(Thread):
         WAIT_TIME (float): Time in seconds to sleep.
 
     Args:
-        queue (Queue.Queue): Python queue to store the output of the subprocess.
+        queue (queue.Queue): Python queue to store the output of the subprocess.
 
     Warnings:
         All the operations are based on 'str' types. The caller has to convert
@@ -58,9 +56,10 @@ class PipeReader(Thread):
 
         while self._running:
             if self._filedescriptor is not None:
-                for line in iter(self._filedescriptor.readline, str('')):
+                for line in self._filedescriptor.readlines():
+                    line=line.decode("utf-8")
                     # Ignore ffmpeg stderr
-                    if str('ffmpeg version') in line:
+                    if 'ffmpeg version' in line:
                         ignore_line = True
 
                     if not ignore_line:
@@ -166,8 +165,7 @@ class YoutubeDLDownloader(object):
             self._stderr_reader.attach_filedescriptor(self._proc.stderr)
 
         while self._proc_is_alive():
-            stdout = self._proc.stdout.readline().rstrip()
-            stdout = convert_item(stdout, to_unicode=True)
+            stdout = self._proc.stdout.readline().decode("utf-8").rstrip()
 
             if stdout:
                 data_dict = extract_data(stdout)
@@ -178,7 +176,6 @@ class YoutubeDLDownloader(object):
         # We don't need to read stderr in real time
         while not self._stderr_queue.empty():
             stderr = self._stderr_queue.get_nowait().rstrip()
-            stderr = convert_item(stderr, to_unicode=True)
 
             self._log(stderr)
 
@@ -314,7 +311,7 @@ class YoutubeDLDownloader(object):
         if os.name == 'nt':
             cmd = [self.youtubedl_path] + options + [url]
         else:
-            cmd = ['python', self.youtubedl_path] + options + [url]
+            cmd = ['python3', self.youtubedl_path] + options + [url]
 
         return cmd
 
@@ -339,11 +336,6 @@ class YoutubeDLDownloader(object):
             # in order to kill the whole process group with os.killpg
             preexec = os.setsid
 
-        # Encode command for subprocess
-        # Refer to http://stackoverflow.com/a/9951851/35070
-        if sys.version_info < (3, 0):
-            cmd = convert_item(cmd, to_unicode=False)
-
         try:
             self._proc = subprocess.Popen(cmd,
                                           stdout=subprocess.PIPE,
@@ -352,7 +344,7 @@ class YoutubeDLDownloader(object):
                                           startupinfo=info)
         except (ValueError, OSError) as error:
             self._log('Failed to start process: {}'.format(ucmd))
-            self._log(convert_item(str(error), to_unicode=True))
+            self._log(str(error))
 
 
 def extract_data(stdout):

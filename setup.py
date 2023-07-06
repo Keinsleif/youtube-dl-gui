@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """Youtube-dlg setup file.
@@ -52,7 +52,7 @@ Notes:
 """
 
 from distutils import cmd, log
-from distutils.core import setup
+from setuptools import setup
 from distutils.command.build import build
 
 import os
@@ -217,6 +217,11 @@ def linux_setup():
         ("share/man/man1", ["youtube-dl-gui.1"])
     )
 
+    # Add .desktop
+    data_files.append(
+        ("share/applications",["youtube-dlg.desktop"])
+    )
+
     # Add pixmaps icons (*.png) & i18n files
     package_data[__packagename__] = [
         "data/pixmaps/*.png",
@@ -263,11 +268,6 @@ def windows_setup():
             "C:\\python27\\DLLs\\MSVCP90.dll"
         ]
 
-        options = {
-            "includes": ["wx.lib.pubsub.*",
-                         "wx.lib.pubsub.core.*",
-                         "wx.lib.pubsub.core.arg1.*"]
-        }
         #############################################
 
         # Add py2exe deps & pixmaps icons (*.png)

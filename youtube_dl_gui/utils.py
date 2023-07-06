@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """Youtubedlg module that contains util functions.
@@ -10,7 +10,7 @@ Attributes:
 
 """
 
-from __future__ import unicode_literals
+
 
 import os
 import sys
@@ -22,7 +22,7 @@ import subprocess
 try:
     from twodict import TwoWayOrderedDict
 except ImportError as error:
-    print error
+    print(error)
     sys.exit(1)
 
 from .info import __appname__
@@ -53,75 +53,24 @@ def get_encoding():
     return encoding
 
 
-def convert_item(item, to_unicode=False):
-    """Convert item between 'unicode' and 'str'.
-
-    Args:
-        item (-): Can be any python item.
-
-        to_unicode (boolean): When True it will convert all the 'str' types
-            to 'unicode'. When False it will convert all the 'unicode'
-            types back to 'str'.
-
-    """
-    if to_unicode and isinstance(item, str):
-        # Convert str to unicode
-        return item.decode(get_encoding(), 'ignore')
-
-    if not to_unicode and isinstance(item, unicode):
-        # Convert unicode to str
-        return item.encode(get_encoding(), 'ignore')
-
-    if hasattr(item, '__iter__'):
-        # Handle iterables
-        temp_list = []
-
-        for sub_item in item:
-            if isinstance(item, dict):
-                temp_list.append((convert_item(sub_item, to_unicode), convert_item(item[sub_item], to_unicode)))
-            else:
-                temp_list.append(convert_item(sub_item, to_unicode))
-
-        return type(item)(temp_list)
-
-    return item
-
-
-def convert_on_bounds(func):
-    """Decorator to convert string inputs & outputs.
-
-    Covert string inputs & outputs between 'str' and 'unicode' at the
-    application bounds using the preferred system encoding. It will convert
-    all the string params (args, kwargs) to 'str' type and all the
-    returned strings values back to 'unicode'.
-
-    """
-    def wrapper(*args, **kwargs):
-        returned_value = func(*convert_item(args), **convert_item(kwargs))
-
-        return convert_item(returned_value, True)
-
-    return wrapper
-
-
 # See: https://github.com/MrS0m30n3/youtube-dl-gui/issues/57
 # Patch os functions to convert between 'str' and 'unicode' on app bounds
-os_sep = unicode(os.sep)
-os_getenv = convert_on_bounds(os.getenv)
-os_makedirs = convert_on_bounds(os.makedirs)
-os_path_isdir = convert_on_bounds(os.path.isdir)
-os_path_exists = convert_on_bounds(os.path.exists)
-os_path_dirname = convert_on_bounds(os.path.dirname)
-os_path_abspath = convert_on_bounds(os.path.abspath)
-os_path_realpath = convert_on_bounds(os.path.realpath)
-os_path_expanduser = convert_on_bounds(os.path.expanduser)
+os_sep = str(os.sep)
+os_getenv = os.getenv
+os_makedirs = os.makedirs
+os_path_isdir = os.path.isdir
+os_path_exists = os.path.exists
+os_path_dirname = os.path.dirname
+os_path_abspath = os.path.abspath
+os_path_realpath = os.path.realpath
+os_path_expanduser = os.path.expanduser
 
 # Patch locale functions
-locale_getdefaultlocale = convert_on_bounds(locale.getdefaultlocale)
+locale_getdefaultlocale = locale.getdefaultlocale
 
 # Patch Windows specific functions
 if os.name == 'nt':
-    os_startfile = convert_on_bounds(os.startfile)
+    os_startfile = os.startfile
 
 def remove_file(filename):
     if os_path_exists(filename):

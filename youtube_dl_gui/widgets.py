@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-from __future__ import unicode_literals
+
 
 import sys
 
 try:
     import wx
 except ImportError as error:
-    print error
+    print(error)
     sys.exit(1)
 
 
@@ -139,8 +139,7 @@ class ListBoxWithHeaders(wx.ListBox):
         super(ListBoxWithHeaders, self).Append(self._add_prefix(string))
 
     def AppendItems(self, strings):
-        strings = [self._add_prefix(string) for string in strings]
-        super(ListBoxWithHeaders, self).AppendItems(strings)
+        [super(ListBoxWithHeaders, self).Append(self._add_prefix(string)) for string in strings]
 
     def Clear(self):
         self.__headers.clear()
@@ -170,7 +169,7 @@ class ListBoxWithHeaders(wx.ListBox):
         if with_prefix:
             items = [self._add_prefix(item) for item in items]
 
-        super(ListBoxWithHeaders, self).AppendItems(items)
+        [super(ListBoxWithHeaders, self).Append(item) for item in items]
 
 
 class ListBoxPopup(wx.PopupTransientWindow):
@@ -178,7 +177,7 @@ class ListBoxPopup(wx.PopupTransientWindow):
     """ListBoxWithHeaders as a popup.
 
     This class uses the wx.PopupTransientWindow to create the popup and the
-    API is based on the wx.combo.ComboPopup class.
+    API is based on the wx.adv.ComboPopup class.
 
     Attributes:
         EVENTS_TABLE (dict): Dictionary that contains all the events
@@ -219,7 +218,7 @@ class ListBoxPopup(wx.PopupTransientWindow):
     def OnDismiss(self):
         wx.PostEvent(self, self.EVENTS_TABLE["EVT_COMBOBOX_CLOSEUP"])
 
-    # wx.combo.ComboPopup methods
+    # wx.adv.ComboPopup methods
 
     def Init(self):
         self.value = self.curitem = -1
@@ -303,7 +302,7 @@ class CustomComboBox(wx.Panel):
         # Bind events
         self.button.Bind(wx.EVT_BUTTON, self._on_button)
 
-        for event in ListBoxPopup.EVENTS_TABLE.values():
+        for event in list(ListBoxPopup.EVENTS_TABLE.values()):
             self.listbox.Bind(wx.PyEventBinder(event.GetEventType()), self._propagate)
 
         # Append items since the ListBoxPopup does not have the 'choices' arg

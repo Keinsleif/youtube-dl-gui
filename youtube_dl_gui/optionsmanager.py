@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """Youtubedlg module to handle settings. """
 
-from __future__ import unicode_literals
+
 
 import os
 import json
@@ -327,7 +327,7 @@ class OptionsManager(object):
         """Save options to settings file. """
         check_path(self.config_path)
 
-        with open(self.settings_file, 'wb') as settings_file:
+        with open(self.settings_file, 'w') as settings_file:
             options = self._get_options()
             json.dump(options,
                       settings_file,
@@ -373,17 +373,17 @@ class OptionsManager(object):
 
         # Check if each key has a valid value
         rules_dict = {
-            'video_format': FORMATS.keys(),
+            'video_format': list(FORMATS.keys()),
             'second_video_format': VALID_VIDEO_FORMAT,
             'audio_format': VALID_AUDIO_FORMAT,
             'audio_quality': VALID_AUDIO_QUALITY,
-            'output_format': OUTPUT_FORMATS.keys(),
+            'output_format': list(OUTPUT_FORMATS.keys()),
             'min_filesize_unit': VALID_FILESIZE_UNIT,
             'max_filesize_unit': VALID_FILESIZE_UNIT,
             'subs_lang': VALID_SUB_LANGUAGE
         }
 
-        for key, valid_list in rules_dict.items():
+        for key, valid_list in list(rules_dict.items()):
             if settings_dictionary[key] not in valid_list:
                 return False
 

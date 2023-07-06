@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """Youtubedlg module responsible for parsing the options. """
 
-from __future__ import unicode_literals
+
 
 import os.path
 

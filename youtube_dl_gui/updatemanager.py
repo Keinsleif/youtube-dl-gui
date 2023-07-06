@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """Youtubedlg module to update youtube-dl binary.
@@ -9,15 +9,16 @@ Attributes:
 
 """
 
-from __future__ import unicode_literals
+
 
 import os.path
 from threading import Thread
-from urllib2 import urlopen, URLError, HTTPError
+from urllib.request import urlopen
+from urllib.error import URLError, HTTPError
 
 from wx import CallAfter
-from wx.lib.pubsub import setuparg1
-from wx.lib.pubsub import pub as Publisher
+#from wx.lib.pubsub import setuparg1
+from pubsub import pub as Publisher
 
 from .utils import (
     YOUTUBEDL_BIN,
@@ -70,7 +71,7 @@ class UpdateThread(Thread):
 
             self._talk_to_gui('correct')
         except (HTTPError, URLError, IOError) as error:
-            self._talk_to_gui('error', unicode(error))
+            self._talk_to_gui('error', str(error))
 
         if not self.quiet:
             self._talk_to_gui('finish')
@@ -93,4 +94,4 @@ class UpdateThread(Thread):
                 4) finish: The update thread is ready to join
 
         """
-        CallAfter(Publisher.sendMessage, UPDATE_PUB_TOPIC, (signal, data))
+        CallAfter(Publisher.sendMessage, UPDATE_PUB_TOPIC, msg=(signal, data))

@@ -1,16 +1,16 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """Youtubedlg module responsible for the main app window. """
 
-from __future__ import unicode_literals
+
 
 import os
 import gettext
 
 import wx
-from wx.lib.pubsub import setuparg1 #NOTE Should remove deprecated
-from wx.lib.pubsub import pub as Publisher
+#from wx.lib.pubsub import setuparg1 #NOTE Should remove deprecated
+from pubsub import pub as Publisher
 
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
 
@@ -722,7 +722,7 @@ class MainFrame(wx.Frame):
             log_window.Show()
 
     def _on_about(self, event):
-        info = wx.AboutDialogInfo()
+        info = wx.adv.AboutDialogInfo()
 
         if self.app_icon is not None:
             info.SetIcon(self.app_icon)
@@ -734,7 +734,7 @@ class MainFrame(wx.Frame):
         info.SetLicense(__licensefull__)
         info.AddDeveloper(__author__)
 
-        wx.AboutBox(info)
+        wx.adv.AboutBox(info)
 
     def _set_publisher(self, handler, topic):
         """Sets a handler for the given topic.
@@ -801,7 +801,7 @@ class MainFrame(wx.Frame):
 
         top_sizer = wx.BoxSizer(wx.HORIZONTAL)
         top_sizer.Add(self._url_text, 0, wx.ALIGN_BOTTOM | wx.BOTTOM, 5)
-        top_sizer.AddSpacer((-1, -1), 1)
+        top_sizer.Add((-1, -1), 1)
         top_sizer.Add(self._settings_button)
         panel_sizer.Add(top_sizer, 0, wx.EXPAND)
 
@@ -809,13 +809,13 @@ class MainFrame(wx.Frame):
 
         mid_sizer = wx.BoxSizer(wx.HORIZONTAL)
         mid_sizer.Add(self._folder_icon)
-        mid_sizer.AddSpacer((3, -1))
+        mid_sizer.Add((3, -1))
         mid_sizer.Add(self._path_combobox, 2, wx.ALIGN_CENTER_VERTICAL)
-        mid_sizer.AddSpacer((5, -1))
+        mid_sizer.Add((5, -1))
         mid_sizer.Add(self._buttons["savepath"], flag=wx.ALIGN_CENTER_VERTICAL)
-        mid_sizer.AddSpacer((10, -1), 1)
+        mid_sizer.Add((10, -1), 1)
         mid_sizer.Add(self._videoformat_combobox, 1, wx.ALIGN_CENTER_VERTICAL)
-        mid_sizer.AddSpacer((5, -1))
+        mid_sizer.Add((5, -1))
         mid_sizer.Add(self._buttons["add"], flag=wx.ALIGN_CENTER_VERTICAL)
         panel_sizer.Add(mid_sizer, 0, wx.EXPAND | wx.ALL, 10)
 
@@ -824,17 +824,17 @@ class MainFrame(wx.Frame):
 
         bottom_sizer = wx.BoxSizer(wx.HORIZONTAL)
         bottom_sizer.Add(self._buttons["delete"])
-        bottom_sizer.AddSpacer((5, -1))
+        bottom_sizer.Add((5, -1))
         bottom_sizer.Add(self._buttons["play"])
-        bottom_sizer.AddSpacer((5, -1))
+        bottom_sizer.Add((5, -1))
         bottom_sizer.Add(self._buttons["up"])
-        bottom_sizer.AddSpacer((5, -1))
+        bottom_sizer.Add((5, -1))
         bottom_sizer.Add(self._buttons["down"])
-        bottom_sizer.AddSpacer((5, -1))
+        bottom_sizer.Add((5, -1))
         bottom_sizer.Add(self._buttons["reload"])
-        bottom_sizer.AddSpacer((5, -1))
+        bottom_sizer.Add((5, -1))
         bottom_sizer.Add(self._buttons["pause"])
-        bottom_sizer.AddSpacer((10, -1), 1)
+        bottom_sizer.Add((10, -1), 1)
         bottom_sizer.Add(self._buttons["start"])
         panel_sizer.Add(bottom_sizer, 0, wx.EXPAND | wx.TOP, 5)
 
@@ -913,7 +913,7 @@ class MainFrame(wx.Frame):
             See downloadmanager.Worker _talk_to_gui() method.
 
         """
-        signal, data = msg.data
+        signal, data = msg #signal, data = msg.data
 
         download_item = self._download_list.get_item(data["index"])
         download_item.update_stats(data)
@@ -930,7 +930,7 @@ class MainFrame(wx.Frame):
             See downloadmanager.DownloadManager _talk_to_gui() method.
 
         """
-        data = msg.data
+        data=msg #data = msg.data
 
         if data == 'finished':
             self._print_stats()
@@ -959,7 +959,7 @@ class MainFrame(wx.Frame):
             See updatemanager.UpdateThread _talk_to_gui() method.
 
         """
-        data = msg.data
+        data = msg #data = msg.data
 
         if data[0] == 'download':
             self._status_bar_write(self.UPDATING_MSG)
@@ -997,7 +997,7 @@ class MainFrame(wx.Frame):
         if not wx.TheClipboard.IsOpened():
 
             if wx.TheClipboard.Open():
-                if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_TEXT)):
+                if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_TEXT)) or True:
 
                     data = wx.TextDataObject()
                     wx.TheClipboard.GetData(data)
@@ -1140,7 +1140,7 @@ class ListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin):
         return url in self._url_list
 
     def bind_item(self, download_item):
-        self.InsertStringItem(self._list_index, download_item.url)
+        self.InsertItem(self._list_index, download_item.url)
 
         self.SetItemData(self._list_index, download_item.object_id)
 
@@ -1160,9 +1160,9 @@ class ListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin):
                                               progress_stats["playlist_index"],
                                               progress_stats["playlist_size"])
 
-                self.SetStringItem(row, column, status)
+                self.SetItem(row, column, status)
             else:
-                self.SetStringItem(row, column, progress_stats[key])
+                self.SetItem(row, column, progress_stats[key])
 
     def clear(self):
         """Clear the ListCtrl widget & reset self._list_index and
@@ -1179,10 +1179,10 @@ class ListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin):
         return self.GetNextItem(-1, wx.LIST_NEXT_ALL, wx.LIST_STATE_SELECTED)
 
     def get_all_selected(self):
-        return [index for index in xrange(self._list_index) if self.IsSelected(index)]
+        return [index for index in range(self._list_index) if self.IsSelected(index)]
 
     def deselect_all(self):
-        for index in xrange(self._list_index):
+        for index in range(self._list_index):
             self.Select(index, on=0)
 
     def get_next_selected(self, start=-1, reverse=False):
@@ -1198,7 +1198,7 @@ class ListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin):
         end = -1 if reverse else self._list_index
         step = -1 if reverse else 1
 
-        for index in xrange(start, end, step):
+        for index in range(start, end, step):
             if self.IsSelected(index):
                 return index
 
@@ -1337,7 +1337,7 @@ class ButtonsChoiceDialog(wx.Dialog):
 
         message_sizer = wx.BoxSizer(wx.HORIZONTAL)
         message_sizer.Add(info_icon)
-        message_sizer.AddSpacer((10, 10))
+        message_sizer.Add((10, 10))
         message_sizer.Add(msg_text, flag=wx.EXPAND)
 
         vertical_sizer.Add(message_sizer, 1, wx.ALL, border=self.BORDER)
@@ -1345,9 +1345,9 @@ class ButtonsChoiceDialog(wx.Dialog):
         buttons_sizer = wx.BoxSizer(wx.HORIZONTAL)
         for button in buttons[1:]:
             buttons_sizer.Add(button)
-            buttons_sizer.AddSpacer((5, -1))
+            buttons_sizer.Add((5, -1))
 
-        buttons_sizer.AddSpacer((-1, -1), 1)
+        buttons_sizer.Add((-1, -1), 1)
         buttons_sizer.Add(buttons[0], flag=wx.ALIGN_RIGHT)
         vertical_sizer.Add(buttons_sizer, flag=wx.EXPAND | wx.ALL, border=self.BORDER)
 
@@ -1407,7 +1407,7 @@ class ButtonsGroup(object):
             box_sizer.Add(button)
 
             if space != -1:
-                box_sizer.AddSpacer((space, space))
+                box_sizer.Add((space, space))
 
         return box_sizer
 
@@ -1460,14 +1460,14 @@ class ShutdownDialog(wx.Dialog):
 
         message_sizer = wx.BoxSizer(wx.HORIZONTAL)
         message_sizer.Add(info_icon)
-        message_sizer.AddSpacer((10, 10))
+        message_sizer.Add((10, 10))
         message_sizer.Add(msg_text, flag=wx.EXPAND)
 
         vertical_sizer.Add(message_sizer, 1, wx.ALL, border=self.BORDER)
 
         buttons_sizer = wx.BoxSizer(wx.HORIZONTAL)
         buttons_sizer.Add(ok_button)
-        buttons_sizer.AddSpacer((5, -1))
+        buttons_sizer.Add((5, -1))
         buttons_sizer.Add(cancel_button)
 
         vertical_sizer.Add(buttons_sizer, flag=wx.ALIGN_RIGHT | wx.ALL, border=self.BORDER)

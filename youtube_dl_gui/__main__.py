@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """Youtubedlg __main__ file.
@@ -22,7 +22,7 @@ Example:
 
 """
 
-from __future__ import unicode_literals
+
 
 import sys
 
